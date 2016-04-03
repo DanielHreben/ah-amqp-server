@@ -1,0 +1,29 @@
+{
+  "name": "ah-amqp-server",
+  "version": "1.0.0",
+  "description": "Actionhero amqp server",
+  "main": "./lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SDSWanderer/ah-amqp-server.git"
+  },
+  "keywords": [
+    "actionhero",
+    "amqp",
+    "rabbitmq",
+    "rpc",
+    "server"
+  ],
+  "author": "Danil Greben",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SDSWanderer/ah-amqp-server/issues"
+  },
+  "homepage": "https://github.com/SDSWanderer/ah-amqp-server#readme",
+  "dependencies": {
+    "yarpc": "git+https://github.com/SDSWanderer/yarpc.git"
+  }
+}
