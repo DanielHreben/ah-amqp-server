@@ -4,7 +4,7 @@ exports['default'] = {
   servers: {
     web: function(api){
       return {
-        enabled: true,
+        enabled: false,
         // HTTP or HTTPS?
         secure: false,
         // Passed to https.createServer if secure=true. Should contain SSL certificates

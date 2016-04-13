@@ -30,5 +30,8 @@
 	"actionhero member %s has left the cluster": "actionhero member %s has left the cluster",
 	"The actionhero has been stopped": "The actionhero has been stopped",
 	"***": "***",
-	"[ action @ %s ]": "[ action @ %s ]"
+	"[ action @ %s ]": "[ action @ %s ]",
+	"Cannot write client-side JS for websocket server:": "Cannot write client-side JS for websocket server:",
+	"*** rebooting due to config change (%s) ***": "*** rebooting due to config change (%s) ***",
+	"*** actionhero restarted ***": "*** actionhero restarted ***"
 }

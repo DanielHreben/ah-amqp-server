@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "actionhero": "13.3.0",
-    "ah-amqp-server": "file:../ah-amqp-server"
+    "ah-amqp-server": "file:../"
   },
   "devDependencies": {
     "mocha": "latest",

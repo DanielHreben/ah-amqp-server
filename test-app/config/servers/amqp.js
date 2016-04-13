@@ -4,11 +4,12 @@ exports.default = {
             return {
                 enabled: true,
 
-                url:        'amqp://localhost',
-                durable:    true,
-                autoDelete: false,
-
-                queue: 'test_rpc'
+                // url:        'amqp://localhost',
+                inputQueue: {
+                    name: 'AHServer:input',
+                    durable:    false,
+                    autoDelete: true,
+                }
             };
         }
     }
