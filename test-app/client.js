@@ -13,15 +13,19 @@ Client.init({
         name: 'AHServer:output',
         durable:    false,
         autoDelete: true,
+
     }
 })
 .then(client => {
     return Promise.all([
         client.call('showDocumentation', {a: 1}),
         client.call('status',  {a: 2}),
-    ]);
+    ])
+    .then(response => {
+        console.log(response);
+    })
+    .then(() => {
+        return client.flush();
+    });
 })
-.then(response => {
-    console.log(response);
-});
-
+.catch(console.error)

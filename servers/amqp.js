@@ -17,6 +17,8 @@ let initialize = function(api, options, next) {
 
     ahServer.start = function(next) {
         RPCServer.init(options).then(rpcServer => {
+            this.rpcServer = rpcServer;
+
             actions.forEach(action => {
                 rpcServer.addHandler(action, params => {
                     let mergedParams = Object.assign({action: action}, params);
@@ -40,7 +42,9 @@ let initialize = function(api, options, next) {
     };
 
     ahServer.stop = function(next) {
-        next();
+        this.rpcServer.close().then(() => {
+            process.nextTick(() => next());
+        });
     };
 
     ahServer.on('actionComplete', function(data) {

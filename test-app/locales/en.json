@@ -33,5 +33,6 @@
 	"[ action @ %s ]": "[ action @ %s ]",
 	"Cannot write client-side JS for websocket server:": "Cannot write client-side JS for websocket server:",
 	"*** rebooting due to config change (%s) ***": "*** rebooting due to config change (%s) ***",
-	"*** actionhero restarted ***": "*** actionhero restarted ***"
+	"*** actionhero restarted ***": "*** actionhero restarted ***",
+	"Unable to remove pidfile": "Unable to remove pidfile"
 }
