@@ -42,7 +42,7 @@ let initialize = function(api, options, next) {
     };
 
     ahServer.stop = function(next) {
-        this.rpcServer.close().then(() => {
+        this.rpcServer.stop().then(() => {
             process.nextTick(() => next());
         });
     };
