@@ -13,7 +13,7 @@ let initialize = function(api, options, next) {
 
     let ahServer   = new api.genericServer('amqp', options, attributes);
     let actions    = Object.keys(api.actions.actions);
-    let amqpRoutes = api.config.amqpRoutes;
+    let amqpRoutes = api.config.amqpRoutes || [];
 
 
     ahServer.start = function(next) {
