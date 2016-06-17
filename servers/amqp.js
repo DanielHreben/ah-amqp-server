@@ -1,6 +1,6 @@
 "use strict";
 
-const RPCServer = require('yarpc').Server;
+const {Server, PubSub} = require('yarpc');
 
 let initialize = function(api, options, next) {
     let attributes = {
@@ -11,16 +11,18 @@ let initialize = function(api, options, next) {
         verbs:              [ ]
     };
 
-    let ahServer = new api.genericServer('amqp', options, attributes);
-    let actions  = Object.keys(api.actions.actions);
+    let ahServer   = new api.genericServer('amqp', options, attributes);
+    let actions    = Object.keys(api.actions.actions);
+    let amqpRoutes = api.config.amqpRoutes || [];
 
 
     ahServer.start = function(next) {
-        RPCServer.init(options).then(rpcServer => {
+        Promise.all([Server.init(options), PubSub.init(options)])
+        .then(([rpcServer, pubSub]) => {
             this.rpcServer = rpcServer;
 
-            actions.forEach(action => {
-                rpcServer.addHandler(action, params => {
+            let handler = action => {
+                return params => {
                     let mergedParams = Object.assign({action: action}, params);
 
                     return new Promise(resolve => {
@@ -33,12 +35,19 @@ let initialize = function(api, options, next) {
                             remotePort:    '0'
                         });
                     });
-                });
+                };
+            };
+
+            actions.forEach(action => {
+                rpcServer.addHandler(action, handler(action));
             });
-        });
 
-
-        next();
+            amqpRoutes.forEach(route => {
+                pubSub.subscribe(route.path, handler(route.action));
+            });
+        })
+        .then(()     => next())
+        .catch(error => next(error));
     };
 
     ahServer.stop = function(next) {
