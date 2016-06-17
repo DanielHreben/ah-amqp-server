@@ -1,6 +1,6 @@
 "use strict";
 
-const uuid             = require('node-uuid');
+const uuid = require('node-uuid');
 const {Server, PubSub} = require('yarpc');
 
 let initialize = function(api, options, next) {
@@ -63,10 +63,16 @@ let initialize = function(api, options, next) {
         });
     };
 
+    ahServer.goodbye = function(){
+      // disconnect handlers
+    };
+
     ahServer.on('actionComplete', function(data) {
         let handlerId = data.connection.rawConnection.handlerId;
         handlers[handlerId](data.response);
         delete handlers[handlerId];
+        data.connection.destroy();
+
     });
 
     ahServer.on('connection', function(connection) {
@@ -76,5 +82,6 @@ let initialize = function(api, options, next) {
 
     next(ahServer);
 };
+
 
 exports.initialize = initialize;
