@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/SDSWanderer/ah-amqp-server#readme",
   "dependencies": {
+    "node-uuid": "^1.4.7",
     "yarpc": "git+http://gitlab.uapay.ua/UAPAY_NG_LIBS/yarpc.git"
   }
 }

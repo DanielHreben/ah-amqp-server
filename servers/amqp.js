@@ -1,5 +1,6 @@
 "use strict";
 
+const uuid             = require('node-uuid');
 const {Server, PubSub} = require('yarpc');
 
 let initialize = function(api, options, next) {
@@ -14,36 +15,42 @@ let initialize = function(api, options, next) {
     let ahServer   = new api.genericServer('amqp', options, attributes);
     let actions    = Object.keys(api.actions.actions);
     let amqpRoutes = api.config.amqpRoutes || [];
+    let handlers   = {};
 
+    ahServer._buildHandler = function(action) {
+        return params => {
+            let mergedParams = Object.assign({action: action}, params);
+
+            let id = uuid.v1();
+
+            let promise = new Promise(resolve => {
+                handlers[id] = resolve;
+            });
+
+            this.buildConnection({
+                rawConnection: {
+                    params:    mergedParams,
+                    handlerId: id,
+                },
+                remoteAddress: '0',
+                remotePort:    '0'
+            });
+
+            return promise;
+        };
+    };
 
     ahServer.start = function(next) {
         Promise.all([Server.init(options), PubSub.init(options)])
         .then(([rpcServer, pubSub]) => {
             this.rpcServer = rpcServer;
 
-            let handler = action => {
-                return params => {
-                    let mergedParams = Object.assign({action: action}, params);
-
-                    return new Promise(resolve => {
-                        ahServer.buildConnection({
-                            rawConnection: {
-                                params: mergedParams,
-                                sendResponse: resolve
-                            },
-                            remoteAddress: '0',
-                            remotePort:    '0'
-                        });
-                    });
-                };
-            };
-
             actions.forEach(action => {
-                rpcServer.addHandler(action, handler(action));
+                rpcServer.addHandler(action, this._buildHandler(action));
             });
 
             amqpRoutes.forEach(route => {
-                pubSub.subscribe(route.path, handler(route.action));
+                pubSub.subscribe(route.path, this._buildHandler(route.action));
             });
         })
         .then(()     => next())
@@ -57,8 +64,9 @@ let initialize = function(api, options, next) {
     };
 
     ahServer.on('actionComplete', function(data) {
-        data.connection.rawConnection.sendResponse(data.response);
-        delete data.connection.rawConnection.sendResponse;
+        let handlerId = data.connection.rawConnection.handlerId;
+        handlers[handlerId](data.response);
+        delete handlers[handlerId];
     });
 
     ahServer.on('connection', function(connection) {
@@ -68,6 +76,5 @@ let initialize = function(api, options, next) {
 
     next(ahServer);
 };
-
 
 exports.initialize = initialize;
