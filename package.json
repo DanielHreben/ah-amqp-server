@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SDSWanderer/ah-amqp-server.git"
+    "url": "git+http://gitlab.uapay.ua/UAPAY_NG_LIBS/ah-amqp-server.git"
   },
   "keywords": [
     "actionhero",

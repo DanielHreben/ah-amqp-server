@@ -49,6 +49,7 @@ let initialize = function(api, options, next) {
 
     ahServer.on('actionComplete', function(data) {
         data.connection.rawConnection.sendResponse(data.response);
+        delete data.connection.rawConnection.sendResponse;
     });
 
     ahServer.on('connection', function(connection) {
